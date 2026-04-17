@@ -4,3 +4,4 @@
 kvdb
 tests/test_db
 .DS_Store
+.idea
