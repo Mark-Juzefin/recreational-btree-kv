@@ -2,6 +2,7 @@
 *.idx
 *.data
 .DS_Store
+.idea
 
 # Per-step executables (no extension on macOS/Linux)
 docs/steps/*/hello
