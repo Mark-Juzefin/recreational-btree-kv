@@ -9,9 +9,9 @@ Progressive path from Hello-World-in-C to an on-disk B+ tree. Each step introduc
 
 | #  | Step                           | New concepts                                           | Est.    | Status |
 |----|--------------------------------|--------------------------------------------------------|---------|--------|
-| 00 | [Hello, C](steps/00-hello/)    | `main`, `printf`, fixed-width types, clang, Makefile   | 30 min  | 🟡 |
-| 01 | Pointers & arrays              | `*`, `&`, array decay, pass-by-pointer                 | 1 h     | ⚪ |
-| 02 | Strings & argv                 | `char *`, `\0`, `strlen`/`strcmp`, `argv`              | 1 h     | ⚪ |
+| 00 | [Hello, C](steps/00-hello/)    | `main`, `printf`, fixed-width types, clang, Makefile   | 30 min  | 🟢 |
+| 01 | [Pointers & arrays](steps/01-pointers/) | `*`, `&`, array decay, pass-by-pointer        | 1 h     | 🟢 |
+| 02 | [Strings & argv](steps/02-strings/) | `char *`, `\0`, `strlen`/`strcmp`, `argv`          | 1 h     | 🟡 |
 | 03 | Structs & heap memory          | `struct`, `typedef`, `malloc`/`free`, ASan             | 1.5 h   | ⚪ |
 | 04 | Multi-file & error handling    | `.h`/`.c` split, headers, error codes, `goto cleanup` | 1 h     | ⚪ |
 | 05 | POSIX file I/O                 | `open`/`read`/`write`/`pread`/`pwrite`, `fsync`        | 1.5 h   | ⚪ |

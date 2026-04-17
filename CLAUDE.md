@@ -25,7 +25,7 @@ on-disk B+ tree key-value store.
 
 ## Current Focus
 
-**Active step:** [00 — Hello, C](docs/steps/00-hello/README.md)
+**Active step:** [02 — Strings & argv](docs/steps/02-strings/README.md)
 
 Full roadmap: [docs/roadmap.md](docs/roadmap.md)
 Reference solution: [reference/](reference/) — full on-disk B+ tree, ~1000 LOC.
