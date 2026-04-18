@@ -25,7 +25,7 @@ on-disk B+ tree key-value store.
 
 ## Current Focus
 
-**Active step:** [04 — Multi-file & error handling](docs/steps/04-multi-file/README.md)
+**Active step:** [05 — POSIX file I/O](docs/steps/05-file-io/README.md)
 
 Full roadmap: [docs/roadmap.md](docs/roadmap.md)
 Reference solution: [reference/](reference/) — full on-disk B+ tree, ~1000 LOC.

@@ -19,6 +19,8 @@ docs/steps/03-structs-mem/test
 docs/steps/03-structs-mem/test-asan
 docs/steps/04-multi-file/test
 docs/steps/04-multi-file/test-asan
+docs/steps/05-file-io/test
+docs/steps/05-file-io/test-asan
 
 # Reference build artifacts
 reference/kvdb
