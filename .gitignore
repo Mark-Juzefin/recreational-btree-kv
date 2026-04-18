@@ -1,14 +1,27 @@
+# Object files and macOS debug symbols
 *.o
-*.idx
-*.data
+*.dSYM/
 .DS_Store
+
+# IDE
 .idea
 
-# Per-step executables (no extension on macOS/Linux)
-docs/steps/*/hello
-docs/steps/*/test_*
-docs/steps/*/a.out
+# CMake build dirs (CLion puts them here)
+build/
+cmake-build-*/
+
+# Per-step executables (no extension — list explicitly)
+docs/steps/00-hello/hello
+docs/steps/01-pointers/main
+docs/steps/02-strings/echoer
+docs/steps/03-structs-mem/intvec
+docs/steps/03-structs-mem/test
+docs/steps/03-structs-mem/test-asan
 
 # Reference build artifacts
 reference/kvdb
 reference/tests/test_db
+
+# Data files (for later steps)
+*.idx
+*.data

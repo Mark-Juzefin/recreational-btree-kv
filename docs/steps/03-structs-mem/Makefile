@@ -4,7 +4,7 @@ CFLAGS := -std=c11 -Wall -Wextra -Wpedantic -Wconversion -g -O0
 
 SRC := intvec.c intvec_test.c
 
-.PHONY: run asan clean
+.PHONY: run asan leaks check clean
 
 run: test
 	./test
@@ -12,9 +12,16 @@ run: test
 test: $(SRC)
 	$(CC) $(CFLAGS) -o $@ $(SRC)
 
-asan: CFLAGS += -fsanitize=address,undefined -fno-omit-frame-pointer
-asan: clean test
-	./test
+test-asan: $(SRC)
+	$(CC) $(CFLAGS) -fsanitize=address,undefined -fno-omit-frame-pointer -o $@ $(SRC)
+
+asan: test-asan
+	./test-asan
+
+leaks: test
+	MallocStackLogging=1 leaks --atExit -- ./test
+
+check: asan leaks
 
 clean:
-	rm -f test
+	rm -f test test-asan

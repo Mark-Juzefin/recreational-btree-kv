@@ -50,14 +50,14 @@ AddressSanitizer + run tests — a leak or misuse shows a detailed report).
 
 ## Tasks
 
-- [ ] Define `intvec_t` with `int64_t *data`, `size_t len`, `size_t cap`
-- [ ] Implement `intvec_new` (allocates struct + initial data array)
-- [ ] Implement `intvec_push` (growth via `realloc` when `len == cap`)
-- [ ] Implement `intvec_get` (bounds-check with `assert`)
-- [ ] Implement `intvec_free` (frees data array, then struct)
-- [ ] `intvec_test.c` creates, pushes 1000 items, verifies, frees
-- [ ] `make run` passes
-- [ ] `make asan` passes with zero ASan reports
+- [x] Define `intvec_t` with `int64_t *data`, `size_t len`, `size_t cap`
+- [x] Implement `intvec_new` (allocates struct + initial data array)
+- [x] Implement `intvec_push` (growth via `realloc` when `len == cap`)
+- [x] Implement `intvec_get` (bounds-check with `assert`)
+- [x] Implement `intvec_free` (frees data array, then struct)
+- [x] `intvec_test.c` creates, pushes 1000 items, verifies, frees
+- [x] `make run` passes
+- [x] `make asan` passes with zero ASan reports
 
 ## Done when
 - `make run` prints `all tests passed`
