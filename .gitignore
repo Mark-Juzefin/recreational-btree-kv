@@ -17,6 +17,8 @@ docs/steps/02-strings/echoer
 docs/steps/03-structs-mem/intvec
 docs/steps/03-structs-mem/test
 docs/steps/03-structs-mem/test-asan
+docs/steps/04-multi-file/test
+docs/steps/04-multi-file/test-asan
 
 # Reference build artifacts
 reference/kvdb
