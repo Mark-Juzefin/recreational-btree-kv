@@ -1,59 +1,22 @@
 # Step 01 — Pointers & arrays
 
-## Goal
-Understand how C moves data into and out of functions when the caller wants to
-see changes. Practice pointer syntax (`*`, `&`) and the way arrays decay into
-pointers when passed around.
+Builds `main.c` with `increment` / `sum` / `reverse` over `int` arrays.
 
-## New concepts (3)
+## Concepts
 
 1. **Pointers** (`*T`, `&x`, `*p`) — a variable holding a memory address. C has
-   no pass-by-reference; to mutate a caller's variable, pass its address.
-   - *Go analogue:* `*T`, `&x`, `*p` — same spelling, same idea. In Go you use
-     them explicitly when you need mutation; in C you use them constantly
-     because there's no alternative.
+   **no pass-by-reference**: to mutate a caller's variable you pass its address
+   and dereference. This isn't a style choice like in Go — it's the only
+   mechanism, so pointers show up constantly.
 
-2. **Array-to-pointer decay** — using an array's name in most contexts
-   (including function arguments) automatically yields a pointer to its first
-   element. There is no "the array itself" as a value type.
-   - *Go analogue:* slices carry a pointer + length + cap. C arrays carry only
-     the pointer; length travels separately.
+2. **Array-to-pointer decay** — an array's name in most contexts (especially a
+   function argument) silently becomes a pointer to its first element. There is
+   no "array as a value" you can pass around, and **length does not travel with
+   it** — that's why every array function also takes a `size_t n`.
+   - Go's slice bundles pointer + len + cap; a C array is just the pointer.
 
-3. **`size_t` for sizes and indices** — a platform-sized unsigned integer
-   (`unsigned long` on 64-bit macOS/Linux). Use it for anything that counts
-   elements or bytes. Matches `sizeof`, `strlen`, `malloc`.
-   - *Go analogue:* Go's `int` (platform-sized signed). In C, the convention
-     for sizes is specifically `size_t`, unsigned.
-
-## Prerequisites
-- Step 00 (toolchain, `printf`, types).
-
-## Exercise
-
-Build `main.c` in this folder. You'll write three small functions that exercise
-each concept, plus a `main` that calls them and prints results.
-
-1. `void increment(int *x)` — adds 1 to the value `x` points at.
-2. `int sum(int *arr, size_t n)` — returns the sum of `n` elements in `arr`.
-3. `void reverse(int *arr, size_t n)` — reverses the array in place.
-
-## Tasks
-
-- [x] `increment` modifies the caller's variable via pointer
-- [x] `sum` iterates an array passed as `int *` + length
-- [x] `reverse` swaps elements in place using a temporary variable
-- [x] `main` calls all three and prints results so they can be visually verified
-- [x] Compiles cleanly under `make run`
-
-## Done when
-- `make run` prints the expected output:
-  ```
-  increment: 6
-  sum: 150
-  reverse: 5 4 3 2 1
-  ```
-- Zero warnings under `-Wall -Wextra -Wpedantic -Wconversion`.
-
-## References
-- `man 3 printf` — format specifiers
-- [`.claude/rules/c-style.md`](../../../.claude/rules/c-style.md) — project conventions
+3. **`size_t`** — platform-sized *unsigned* integer, the type of `sizeof`,
+   `strlen`, `malloc`, and every index/count. Go's convention is signed `int`;
+   C's is specifically unsigned `size_t`. (Consequence to remember: a reverse
+   loop `for (size_t i = n-1; i >= 0; i--)` never ends — unsigned never goes
+   negative.)

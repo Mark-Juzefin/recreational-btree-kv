@@ -1,98 +1,32 @@
 # Step 04 — Multi-file project & error handling
 
-## Goal
-Build a small module `person_t` — a struct that owns two heap strings
-(`name`, `email`) — spread across proper `.h`/`.c` files, with a shared
-`common.h` for error codes. The centrepiece is `person_create`: three
-allocations in a row, any of which can fail. You'll use the `goto cleanup`
-pattern to free what's already allocated and return a meaningful error.
+Builds `person_t` (owns two heap strings) across `common.h` / `person.h` /
+`person.c`, with `person_create` doing a three-step allocation that can fail
+at any step.
 
-## New concepts (3)
+## Concepts
 
-1. **`.h` / `.c` split** — headers declare the public API (types, function
-   prototypes, constants). `.c` files hold the bodies. Include guards
-   (`#ifndef ... #define ... #endif`) stop a header from being inlined twice
-   into the same translation unit.
-   - *Go analogue:* exported vs unexported identifiers within a package.
-     Capital letter = exported, lowercase = package-private. In C you choose
-     what to put in the `.h` — that's the "exported" surface.
+1. **`.h` / `.c` split** — the header is your "exported surface": it declares
+   types, prototypes, constants; the `.c` holds the bodies. **Include guards**
+   (`#ifndef X / #define X / #endif`) exist because `#include` is dumb text
+   pasting — without them a header pulled in twice defines everything twice and
+   the compile fails. Go has no analogue: capitalisation decides visibility and
+   the compiler dedups imports for you.
+   - Rule of thumb: nothing goes in a `.h` that other `.c` files don't need.
 
-2. **Error-code return pattern** — fallible functions return a small
-   integer enum (`kv_result_t`) and deliver their result via an
-   out-parameter. Zero means success; negatives mean specific errors. This
-   makes every error path explicit — callers cannot forget to check.
-   - *Go analogue:* `func f() (Result, error)`. C has no multi-return, so
-     the result is written through a pointer (`out`) and the error becomes
-     the function's return value.
+2. **Error-code return pattern** — a fallible function returns `kv_result_t`
+   (0 = OK, negatives = specific errors) and delivers its real result through an
+   out-parameter (`person_t **out`). C has no `(value, error)` multi-return, so
+   the value goes through a pointer and the error becomes the return value. The
+   payoff: every failure mode is visible in the signature and can't be ignored.
 
-3. **`goto cleanup` pattern** — when a function allocates multiple
-   resources and any step can fail, you need to free what was already
-   allocated before returning the error. C has no `defer`. The idiom is:
-   one `goto fail_<N>` label per cumulative-cleanup level, ordered so that
-   execution falls through, freeing everything backwards. It's the only
-   place `goto` is idiomatic in modern C.
-   - *Go analogue:* chained `defer` calls. Go runs them in LIFO order
-     automatically; in C you stage the cleanup labels manually.
+3. **`goto cleanup` / `goto fail_N`** — C has no `defer`. When you've allocated
+   1..N resources and step N+1 fails, you must free the earlier ones in reverse.
+   The idiom: stacked labels ordered so control falls through, unwinding
+   backwards. Forward jumps to a cleanup label are the **one** place `goto` is
+   idiomatic in modern C — it keeps the error path linear instead of nesting.
+   - Go's LIFO `defer` chain does this automatically; here you stage it by hand.
 
-## Prerequisites
-- Step 03 (heap allocation with `malloc` / `free`, ASan).
-
-## Exercise
-
-Build these files in the step folder:
-
-- `common.h` — `kv_result_t` enum with at least `KV_OK`, `KV_ERR_NOMEM`,
-  `KV_ERR_ARG`. Plus a small `kv_strerror(int)` helper.
-- `person.h` — opaque-ish struct `person_t` (fields exposed for now; full
-  opaque handles come later) and four prototypes:
-  ```c
-  kv_result_t person_create(const char *name, const char *email, person_t **out);
-  void        person_free(person_t *p);
-  kv_result_t person_rename(person_t *p, const char *new_name);
-  const char *person_name(const person_t *p);
-  ```
-- `person.c` — implements them. `person_create` duplicates both input
-  strings onto the heap using `strdup` (or `malloc`+`memcpy` if you want the
-  lower-level version). Demonstrate `goto cleanup` for the three-step
-  allocation.
-- `person_test.c` — exercises success and failure paths.
-- `Makefile` — compiles `person.c` + `person_test.c` into one binary,
-  with `run` / `asan` / `leaks` / `check` targets analogous to step 03.
-
-## Tasks
-
-- [x] `common.h` with `kv_result_t` enum and `kv_strerror`
-- [x] `person.h` with struct, prototypes, include guard
-- [x] `person_create` with three-step alloc + `goto fail_N` cleanup
-- [x] `person_free` (NULL-safe, frees both strings then struct)
-- [x] `person_rename` (frees old name, dups new, error on NULL args)
-- [x] `person_test.c` verifies create/rename/free and NULL-argument handling
-- [x] `Makefile` compiles multi-file build
-- [x] `make run` passes
-- [x] `make check` (asan + leaks) passes clean
-
-## Done when
-- `make run` prints `all tests passed`
-- `make check` passes with zero ASan reports and zero `leaks` output
-- Zero compiler warnings
-- `person.c` has no reachable path that leaks on error
-
-## Key points to internalise
-- A header declares **what exists**, a `.c` defines **how it works**.
-  Rule of thumb: nothing goes in a header that isn't needed by other
-  translation units.
-- Error codes are boring and repetitive — that's the point. Every caller
-  sees every possible failure mode in the signature.
-- `goto` is banned in most style guides *except* for forward jumps to a
-  cleanup label within the same function. Used this way, it's the
-  clearest way to keep cleanup linear.
-
-## References
-- `man 3 strdup` — the string-duplication helper
-- Linux kernel coding style, ch. 7 "Centralized exiting of functions"
-  — the canonical explanation of `goto cleanup`
-- [`.claude/rules/c-style.md`](../../../.claude/rules/c-style.md) — naming,
-  headers, memory, error-handling conventions
-- [`reference/src/common.h`](../../../reference/src/common.h) — similar
-  error-enum pattern used in the final project (peek is OK here, the
-  structure is what we're teaching)
+`person_free` is NULL-safe (frees strings then struct); `person_rename` frees
+the old name before dup-ing the new. Both mirror the "own it → free it once"
+discipline from step 03.
