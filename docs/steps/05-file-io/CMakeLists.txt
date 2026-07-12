@@ -4,6 +4,8 @@ project(step05_file_io C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+add_compile_options(-Wall -Wextra -Wpedantic -g -O0)
+
 add_executable(bytefile_test
     bytefile_test.c
     bytefile.c

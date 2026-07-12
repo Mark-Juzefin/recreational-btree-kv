@@ -3,4 +3,5 @@
   set(CMAKE_C_STANDARD 11)
   add_compile_options(-Wall -Wextra -Wpedantic -Wconversion -g -O0)
 
-  add_executable(intvec_debug intvec.c)
+  add_executable(intvec_debug intvec.c
+          intvec_test.c)

@@ -81,8 +81,8 @@ Build a POSIX file wrapper across:
 - [x] `bytefile_read_at` loops over `pread`; reports EOF on premature end
 - [x] `bytefile_size` uses `fstat`
 - [x] `bytefile_sync` uses `fsync`
-- [ ] `bytefile_test.c` — write, read, size, sync, reopen, re-read
-- [ ] `Makefile` builds it, `make check` passes (ASan + leaks)
+- [x] `bytefile_test.c` — write, read, size, sync, reopen, re-read
+- [x] `Makefile` builds it, `make check` passes (ASan + leaks)
 
 ## Done when
 - `make run` prints `all tests passed`
