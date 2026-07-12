@@ -1,45 +1,32 @@
 # btree-kv
 
-A step-by-step C learning project that ends with a small on-disk B+ tree
-key-value store.
+A small on-disk B+ tree key-value store in C, built from scratch.
 
 ## Goal
 
-Pick up C by building something real, in small progressive steps. The end
-artifact is a CLI (`kvdb`) that stores `int64 -> int64` pairs across two files
-— a paged B+ tree index and an append-only record log — supporting `put`,
-`get`, `del`, and ordered `scan`.
+A CLI that stores `int64 -> int64` pairs in a single file, indexed by a
+**paged on-disk B+ tree**, surviving process restarts — `put`, `get`, and
+(as stretch) `del` / `scan`. The point is durable understanding of manual
+memory management, pointer-heavy APIs, and on-disk layout.
 
-The finished implementation lives in [`reference/`](reference/) as the target
-to converge on. The point isn't the binary — it's durable understanding of
-manual memory management, pointer-heavy APIs, on-disk layout, and the things
-higher-level languages hide.
+## Current state
 
-## Idea
+- **Done:** `bytefile_t` — positional byte I/O over a POSIX fd
+  (`bytefile.{c,h}`, `common.h`, tests in `bytefile_test.c`). This is the base
+  layer everything else builds on.
+- **Next:** pager → node serialization → B+ tree → db + CLI. See
+  [`ROADMAP.md`](ROADMAP.md) for the end result and the task list.
 
-The path is split into **nine small steps**, each introducing ≤3 new concepts
-and producing working, tested code.
+## Build
 
-- **Steps 00-04** — C fundamentals: toolchain, pointers, strings, structs,
-  heap memory, multi-file builds.
-- **Steps 05-08** — apply the fundamentals to build the storage engine:
-  POSIX file I/O, a 4 KB pager, a B+ tree in memory, then on disk.
-
-Every step folder is a **self-contained mini project** with its own `Makefile`,
-source files, and acceptance tests.
+```sh
+make run     # build + run tests
+make check   # ASan + leaks
+make clean
+```
 
 ## Layout
 
+- [`ROADMAP.md`](ROADMAP.md) — end result + task list.
 - [`CLAUDE.md`](CLAUDE.md) — collaboration rules for Claude Code.
-- [`docs/roadmap.md`](docs/roadmap.md) — full nine-step plan with status.
-- [`docs/steps/`](docs/steps/) — one folder per step. Start at `00-hello/`.
-- [`reference/`](reference/) — completed solution; consult only after finishing
-  the corresponding step.
-
-## Workflow
-
-1. Open the active step's `README.md`.
-2. Write the code with Claude as a coach: tiered hints, review, explanations —
-   not finished solutions.
-3. Run `make test` inside the step folder.
-4. When green, `/review-step`, apply feedback, then `/next-step`.
+- `bytefile.{c,h}`, `common.h`, `bytefile_test.c` — the done base code.

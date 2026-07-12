@@ -10,22 +10,10 @@
 build/
 cmake-build-*/
 
-# Per-step executables (no extension — list explicitly)
-docs/steps/00-hello/hello
-docs/steps/01-pointers/main
-docs/steps/02-strings/echoer
-docs/steps/03-structs-mem/intvec
-docs/steps/03-structs-mem/test
-docs/steps/03-structs-mem/test-asan
-docs/steps/04-multi-file/test
-docs/steps/04-multi-file/test-asan
-docs/steps/05-file-io/test
-docs/steps/05-file-io/test-asan
+# Test executables (no extension — list explicitly)
+test
+test-asan
 
-# Reference build artifacts
-reference/kvdb
-reference/tests/test_db
-
-# Data files (for later steps)
+# Data files
 *.idx
 *.data
